@@ -14,12 +14,18 @@ def parse_sen(sen):
         if word in key_words_op.keys():
             curr_op = key_words_op[word]
         if word == 'is':
-            my_equi.append(create_eq(num_params, curr_op, arr_sen[i+1]))
+            eq = create_eq(num_params, curr_op, arr_sen[i+1])
+            if eq:
+                my_equi.append(eq)
     return my_equi
 
 
 def create_eq(num_params, op, num):
-    num = re.findall('\d+', num)[0]
+    num = re.findall('\d+', num)
+    if num:
+        num = num[0]
+    else:
+        return None
     optional_params = ['x', 'y', 'z']
     equi = ''
     for i in range(num_params):
