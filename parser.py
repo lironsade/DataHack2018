@@ -46,9 +46,9 @@ def is_num(s):
 
 
 def rmv_non_digits(num):
-    return ''.join(i for i in num if i.isdigit())
+    return ''.join(i for i in num if i.isdigit() or i == '-')
 
 
 if __name__ == '__main__':
-    sen = 'one number exceeds another by 5, and their sum is 29; find them.'
+    sen = 'one number exceeds another by -5, and their sum is 29; find them.'
     print(parse_sen(sen))
