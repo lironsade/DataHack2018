@@ -26,12 +26,11 @@ def parse_sen(sen):
     my_equis = []
     params = []
     curr_op = ''
+    params, unit_params = [], []
 
     for i, word in enumerate(nlp_sen):
         if word.text in key_words_params and not params_found:
-            all = create_params(word.lefts)
-            params = all[0]
-            unit_params = all[1]
+            params, unit_params = create_params(word.lefts)
             params_found = True
         if word.text in key_words_op.keys():
             curr_op = key_words_op[word.text]
@@ -62,11 +61,11 @@ def create_params(sons):
                 try:
                     num_params = int(son.text)
                 except:
-                    return []
+                    return [], []
             else:
                 num_params = key_words_num[son.text]
             if num_params > 4:
-                return []
+                return [], []
             for i in range(num_params):
                 params.append(op_params[i])
             unit_param = params
@@ -78,7 +77,7 @@ def create_params(sons):
         if son.text == 'odd':
             params = solver.odd_num(params)
     if num_params == -1:
-        return []
+        return [], []
     return params, unit_param
 
 

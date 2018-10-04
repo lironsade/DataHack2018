@@ -7,6 +7,8 @@ def solve(equations_lst, unkn_lst):
     :param unkn_lst:  ['x', 'y'] -> list of strings
     :return: {(26,14)}' -> FiniteSet of Integers
     """
+    if len(equations_lst) < len(unkn_lst):
+        return []
     A, b = sy.linear_eq_to_matrix(replace_equ(equations_lst), unkn_lst)
     return sy.linsolve((A, b), unkn_lst)
 

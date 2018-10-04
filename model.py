@@ -8,8 +8,11 @@ def solve_problem(sen):
     '''
     returns a set of numbers that should be the result of the sentence.
     '''
-    eqs = parse_sen(sen)
-    sol = solve(eqs, ['x', 'y'])
+    eqs, params = parse_sen(sen)
+    if eqs and params:
+        sol = solve(eqs, params)
+    else:
+        return []
     if sol:
         return list(list(sol)[0])
     else:
