@@ -1,12 +1,12 @@
 import re
 key_words_num = {'one':1, 'two':2, 'three':3}
-key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-'}
+key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-'}
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
 key_words_create = {'of', 'is', 'by'}
 
 
 def parse_sen(sen):
-    arr_sen = sen.split()
+    arr_sen = sen.replace('  ', ' ').split()
     arr_sen = [x.lower() for x in arr_sen]
     my_equi = []
     num_params = 0
