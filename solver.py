@@ -10,12 +10,7 @@ def solve(equations_lst, unkn_lst):
 
 
 def replace_equ(equations_lst):
-    lst = []
-    for equ in equations_lst:
-        s = equ.replace("= ", "-(")
-        s += ')'
-        lst.append(s)
-    return lst
+    return [(s.replace("= ", "-(") + ')') for s in equations_lst]
 
 
 if __name__ == '__main__':
