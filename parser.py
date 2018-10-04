@@ -5,6 +5,7 @@ key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-', 'le
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
 key_words_create = {'of', 'is', 'by'}
 op_params = ['x', 'y', 'z', 'w','a','b','c','d','e','f']
+nlp = spacy.load('en_core_web_sm')
 
 # nlp = spacy.load('en_core_web_sm')
 # doc = nlp(u'If the first and third of three consecutive even integers are added, the result is 12 less than three times the second integer. find the integers')
@@ -19,7 +20,6 @@ def parse_sen(sen):
     """
     parses a mathematical question sentence into equations.
     """
-    nlp = spacy.load('en_core_web_sm')
     is_another = 'another' in sen
     params_found = False
     nlp_sen = nlp(sen.replace('  ', ' '))
