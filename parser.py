@@ -6,6 +6,7 @@ key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-', 'le
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
 key_words_create = {'of', 'is', 'by'}
 op_params = ['x', 'y', 'z', 'w','a','b','c','d','e','f']
+nlp = spacy.load('en_core_web_sm')
 
 # nlp = spacy.load('en_core_web_sm')
 # doc = nlp(u'If the first and third of three consecutive even integers are added, the result is 12 less than three times the second integer. find the integers')
@@ -24,11 +25,12 @@ def parse_sen(sen):
     is_another = ('another' in sen) or ('second' in sen)
     reg_times = 'than \d+ times'
     find_times = re.findall(reg_times, sen)
+
     params_found = False
     nlp_sen = nlp(sen.replace('  ', ' '))
     my_equis = []
-    params = []
     curr_op = ''
+    params, unit_params = [], []
 
     for i, word in enumerate(nlp_sen):
         if word.text in key_words_params and not params_found:
