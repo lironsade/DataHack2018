@@ -25,10 +25,11 @@ def odd_num(unkn_lst):
 
 def consecutive_num(unkn_lst):
     lst = []
-    counter = 1
-    for n in unkn_lst:
-        lst.append(n + ' + ' + str(counter))
-        counter += 1
+    for i, n in enumerate(unkn_lst):
+        if i == 0:
+            lst.append(n)
+        else:
+            lst.append(n + ' + ' + str(i))
     return lst
 
 

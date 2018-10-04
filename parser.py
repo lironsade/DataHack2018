@@ -105,7 +105,7 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'what three consecutive odd integers have a sum of -75?'
+    sen = 'the sum of three consecutive integers x, x + 1, and x + 2, is 72'
     # sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
     print(parse_sen(sen))
     # print(create_eq(['x', 'y'], '+', '6'))
