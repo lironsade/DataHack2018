@@ -36,8 +36,11 @@ def parse_sen(sen):
             if is_another:
                 params.append('y')
                 is_another = False
-            if curr_op == '':
-                curr_op = key_words_op[str(list(word.rights)[0])]
+            op = str(list(word.rights)[0])
+            if word.text == 'is' and curr_op == '' and op in key_words_op.keys():
+                curr_op = key_words_op[op]
+            elif curr_op == '':
+                continue
             eq = create_eq(params, curr_op, rmv_non_digits(nlp_sen[i+1].text))
             if eq:
                 my_equis.append(eq)
@@ -95,7 +98,7 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'A number is 12 less than another.  The sum of the numbers is 28.  find the Numbers.'
+    sen = 'what three consecutive odd integers have a sum of -75?'
     # sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
     print(parse_sen(sen))
     # print(create_eq(['x', 'y'], '+', '6'))
