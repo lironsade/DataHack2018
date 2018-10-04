@@ -10,10 +10,10 @@ def solve(equations_lst, unkn_lst):
 
 
 def replace_equ(equations_lst):
-    return [(s.replace("= ", "-(") + ')') for s in equations_lst]
+    return [(s.replace("=", "-(") + ')') for s in equations_lst]
 
 
 if __name__ == '__main__':
-    equations_smp = ['x+y = 40', '2*x+4*y = 108']
+    equations_smp = ['x+y=68', 'x-y=16']
     unkn = ['x', 'y']
     print(solve(equations_smp, unkn))
