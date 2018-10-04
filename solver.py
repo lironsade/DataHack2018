@@ -12,6 +12,8 @@ def solve(equations_lst, unkn_lst):
     if handle_unkn(unkn_lst_s):
         s_case = True
         unkn_lst = ['x']
+    if len(equations_lst) < len(unkn_lst):
+        return []
     A, b = sy.linear_eq_to_matrix(replace_equ(equations_lst), unkn_lst)
     sol = [eval(str(x)) for b in sy.linsolve((A, b), unkn_lst) for x in b]
     if not s_case:
@@ -72,3 +74,4 @@ if __name__ == '__main__':
     equations_smp = ['2*(x) + 1+2*(x + 1) + 1+2*(x + 2) + 1=-273']
     s_unkn = ['2*(x) + 1', '2*(x + 1) + 1', '2*(x + 2) + 1']
     print(solve(equations_smp, s_unkn))
+

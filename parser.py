@@ -5,6 +5,7 @@ key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-', 'le
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
 key_words_create = {'of', 'is', 'by'}
 op_params = ['x', 'y', 'z', 'w','a','b','c','d','e','f']
+nlp = spacy.load('en_core_web_sm')
 
 # nlp = spacy.load('en_core_web_sm')
 # doc = nlp(u'If the first and third of three consecutive even integers are added, the result is 12 less than three times the second integer. find the integers')
@@ -19,17 +20,18 @@ def parse_sen(sen):
     """
     parses a mathematical question sentence into equations.
     """
-    nlp = spacy.load('en_core_web_sm')
     is_another = 'another' in sen
     params_found = False
     nlp_sen = nlp(sen.replace('  ', ' '))
     my_equis = []
     params = []
     curr_op = ''
+    params, unit_params = [], []
 
     for i, word in enumerate(nlp_sen):
         if word.text in key_words_params and not params_found:
             params = create_params(word.lefts)
+            unit_params = params
             params_found = True
         if word.text in key_words_op.keys():
             curr_op = key_words_op[word.text]
@@ -47,7 +49,7 @@ def parse_sen(sen):
             if eq:
                 my_equis.append(eq)
                 curr_op = ''
-    return my_equis
+    return my_equis, unit_params
 
 
 def create_params(sons):
@@ -105,8 +107,8 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'the sum of three consecutive integers x, x + 1, and x + 2, is 72'
-    # sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
+    # sen = 'A number is 12 less than another.  The sum of the numbers is 28.  find the Numbers.'
+    sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
     print(parse_sen(sen))
     # print(create_eq(['x', 'y'], '+', '6'))
     # print(key_words_op['less'])
