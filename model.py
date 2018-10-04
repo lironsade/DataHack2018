@@ -9,7 +9,6 @@ def solve_problem(sen):
     returns a set of numbers that should be the result of the sentence.
     '''
     eqs = parse_sen(sen)
-    print(eqs)
     return solve(eqs, ['x', 'y'])
 
 
