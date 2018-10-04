@@ -1,23 +1,24 @@
-# input: ['x+y - 40', '2*x+4*y - 108'], ['x', 'y']
-# output: '{26;14}'
+# input: ['x+y - 40', '2*x+4*y - 108'] -> list of strings, ['x', 'y'] -> list of strings
+# output: '{(26,14)}' -> set of intgers
 
-import sympy
+import sympy as sy
 
 
-def main(equations_lst, unkn_lst):
+def solver(equations_lst, unkn_lst):
     A, b = build_matrix(equations_lst, unkn_lst)
-    sol = solver(A, b, unkn_lst)
-    return sol
+    solution = set(sol(A, b, unkn_lst))
+    return solution
 
 
 def build_matrix(equations_lst, unkn_lst):
-    return sympy.linear_eq_to_matrix(equations_lst, unkn_lst)
+    return sy.linear_eq_to_matrix(equations_lst, unkn_lst)
 
 
-def solver(A, b, unkn_lst):
-    return sympy.linsolve((A, b), unkn_lst)
+def sol(A, b, unkn_lst):
+    return sy.linsolve((A, b), unkn_lst)
 
 
-equations = ['x+y - 40', '2*x+4*y - 108']
-unkn = ['x', 'y']
-print(main(equations, unkn))
+if __name__ == '__main__':
+    equations = ['x+y - 40', '2*x+4*y - 108']
+    unkn = ['x', 'y']
+    print(set(solver(equations, unkn)))
