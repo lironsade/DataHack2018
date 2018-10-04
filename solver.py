@@ -5,6 +5,8 @@ import sympy as sy
 
 
 def solve(equations_lst, unkn_lst):
+    if len(equations_lst) < len(unkn_lst):
+        return set()
     A, b = sy.linear_eq_to_matrix(replace_equ(equations_lst), unkn_lst)
     return sy.linsolve((A, b), unkn_lst)
 
