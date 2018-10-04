@@ -1,4 +1,5 @@
 import spacy
+import solver
 key_words_num = {'one':1, 'two':2, 'three':3, 'One':1, 'Two':2, 'Three':3}
 key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-'}
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
@@ -26,10 +27,7 @@ def parse_sen(sen):
     curr_op = ''
     for i, word in enumerate(nlp_sen):
         if word.text in key_words_params:
-            if nlp_sen[i-1].text in key_words_num.keys():
-                num_params = key_words_num[nlp_sen[i-1].text]
-            if nlp_sen[i-1].text.isdigit():
-                num_params = nlp_sen[i-1].text
+            params = create_params(word.lefts)
         if word.text in key_words_op.keys():
             curr_op = key_words_op[word.text]
         if word.text in key_words_create and is_num(nlp_sen[i+1].text):
@@ -37,7 +35,7 @@ def parse_sen(sen):
             if eq:
                 my_equis.append(eq)
         if word.text == 'another':
-            num_params += 1
+            params.append('y')
     return my_equis
 
 
@@ -50,11 +48,11 @@ def create_params(sons):
             for i in range(num_params):
                 params.append(op_params[i])
         if sons[i].text == 'consecutive':
-            params = consecutive(['x']*num_params)
+            params = solver.consecutive_num(['x']*num_params)
         if sons[i].text == 'even':
-            params = even(params)
+            params = solver.double_num(params)
         if sons[i].text == 'odd':
-            params = odd(params)
+            params = solver.consecutive_num(params)
     if num_params == -1:
         return []
     return params
