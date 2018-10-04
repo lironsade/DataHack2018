@@ -29,9 +29,8 @@ def parse_sen(sen):
 
     for i, word in enumerate(nlp_sen):
         if word.text in key_words_params and not params_found:
-            all = create_params(word.lefts)
-            params = all[0]
-            unit_params = all[1]
+            params = create_params(word.lefts)
+            unit_params = params
             params_found = True
         if word.text in key_words_op.keys():
             curr_op = key_words_op[word.text]
@@ -54,7 +53,6 @@ def parse_sen(sen):
 
 def create_params(sons):
     params = []
-    unit_param = []
     num_params = -1
     for son in sons:
         if son.text in key_words_num or is_num(son.text):
@@ -69,17 +67,15 @@ def create_params(sons):
                 return []
             for i in range(num_params):
                 params.append(op_params[i])
-            unit_param = params
         if son.text == 'consecutive':
             params = solver.consecutive_num(['x']*num_params)
-            unit_param = ['x']
         if son.text == 'even':
             params = solver.even_num(params)
         if son.text == 'odd':
             params = solver.odd_num(params)
     if num_params == -1:
         return []
-    return params, unit_param
+    return params
 
 
 def create_eq(params, op, num):
@@ -110,8 +106,8 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'A number is 12 less than another.  The sum of the numbers is 28.  find the Numbers.'
-    # sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
+    # sen = 'A number is 12 less than another.  The sum of the numbers is 28.  find the Numbers.'
+    sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
     print(parse_sen(sen))
     # print(create_eq(['x', 'y'], '+', '6'))
     # print(key_words_op['less'])
