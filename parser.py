@@ -42,6 +42,7 @@ def parse_sen(sen):
         if word.text in key_words_create and is_num(nlp_sen[i+1].text):
             if is_another:
                 params.append('y')
+                unit_params.append('y')
                 is_another = False
             if word.text == 'is' and curr_op == '':
                 if find_times:
@@ -116,7 +117,7 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'The sum of two numbers is 42. one number is 3 less than 4 times the other number. what are the numbers?'
+    sen = 'A number is 12 less than another.  The sum of the numbers is 28.  find the Numbers.'
     # sen = 'The sum of two numbers is 91.  The larger number is 1 more than 4 times the smaller number. Find the numbers.'
     print(parse_sen(sen))
     # print(create_eq(['x', 'y'], '+', '6'))
