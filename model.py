@@ -8,15 +8,15 @@ def solve_problem(sen):
     '''
     returns a set of numbers that should be the result of the sentence.
     '''
-    eqs, params = parse_sen(sen)
-    if eqs and params:
-        sol = solve(eqs, params)
-    else:
-        return []
-    if sol:
-        return list(list(sol)[0])
-    else:
+    try:
+        eqs, params = parse_sen(sen)
+        if eqs and params:
+            sol = solve(eqs, params)
+        else:
+            return []
         return sol
+    except:
+        return []
 
 
 if __name__ == '__main__':
