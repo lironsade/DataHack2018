@@ -20,7 +20,7 @@ def parse_sen(sen):
     parses a mathematical question sentence into equations.
     """
     nlp = spacy.load('en_core_web_sm')
-    nlp_sen = nlp(sen)
+    nlp_sen = nlp(sen.replace('  ', ' '))
     my_equis = []
     num_params = 0
     params = []
@@ -30,8 +30,8 @@ def parse_sen(sen):
             params = create_params(word.lefts)
         if word.text in key_words_op.keys():
             curr_op = key_words_op[word.text]
-        if word.text in key_words_create and is_num(nlp_sen[i+1].text):
-            eq = create_eq(num_params, curr_op, rmv_non_digits(nlp_sen[i+1].text))
+        if (word.text in key_words_create) and is_num(nlp_sen[i+1].text):
+            eq = create_eq(params, curr_op, rmv_non_digits(nlp_sen[i+1].text))
             if eq:
                 my_equis.append(eq)
         if word.text == 'another':
@@ -42,31 +42,38 @@ def parse_sen(sen):
 def create_params(sons):
     params = []
     num_params = -1
-    for i in range(len(sons)):
-        if sons[i].text in key_words_num:
-            num_params = key_words_num[sons[i].text]
+    for son in sons:
+        if son.text in key_words_num or is_num(son.text):
+            if is_num(son.text):
+                num_params = int(son.text)
+            else:
+                num_params = key_words_num[son.text]
             for i in range(num_params):
                 params.append(op_params[i])
-        if sons[i].text == 'consecutive':
+        if son.text == 'consecutive':
             params = solver.consecutive_num(['x']*num_params)
-        if sons[i].text == 'even':
-            params = solver.double_num(params)
-        if sons[i].text == 'odd':
-            params = solver.consecutive_num(params)
+        if son.text == 'even':
+            params = solver.even_num(params)
+        if son.text == 'odd':
+            params = solver.odd_num(params)
     if num_params == -1:
         return []
     return params
 
-def create_eq(num_params, op, num):
+
+def create_eq(params, op, num):
     '''
     creates eq in the form of: param1 [op] param2 [op]... = num
     '''
-    optional_params = ['x', 'y', 'z']
+    if not params:
+        return
+    
     equi = ''
+    length = len(params)
 
-    for i in range(num_params):
-        equi += optional_params[i]
-        if i != num_params - 1:
+    for i in range(length):
+        equi += params[i]
+        if i != length - 1:
             equi += op
 
     equi += '=' + num
@@ -82,5 +89,7 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'what is one plus one'
+    sen = 'The sum of 2 integers is 36. The difference of the same 2 numbers is 4. Find the integers.'
+    # sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
     print(parse_sen(sen))
+    # print(create_eq(['x', 'y'], '+', '6'))
