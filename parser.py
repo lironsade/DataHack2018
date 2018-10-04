@@ -37,9 +37,10 @@ def parse_sen(sen):
             if is_another:
                 params.append('y')
                 is_another = False
-            op = str(list(word.rights)[0])
-            if word.text == 'is' and curr_op == '' and op in key_words_op.keys():
-                curr_op = key_words_op[op]
+            if word.text == 'is' and curr_op == '':
+                right_childs = list(word.rights)
+                if right_childs and str(right_childs[0]) in key_words_op.keys():
+                    curr_op = key_words_op[str(right_childs[0])]
             elif curr_op == '':
                 continue
             eq = create_eq(params, curr_op, rmv_non_digits(nlp_sen[i+1].text))
@@ -80,7 +81,7 @@ def create_eq(params, op, num):
     '''
     creates eq in the form of: param1 [op] param2 [op]... = num
     '''
-    if not params:
+    if not params or op == '':
         return
 
     equi = ''

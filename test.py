@@ -10,15 +10,15 @@ def check_over_data(df):
     success = 0
     wrongs = []
     for index, row in df.iterrows():
-        if row['id'].startswith("algebra"):
-            count += 1
-            ans = model.solve_problem(row['text'])
-            df[index]['my_ans'] = ans
-            if check_ans(ans, row['ans']):
-                success += 1
-            else:
-                wrongs.append(index)
-    return success/count, df, wrongs
+        # if row['id'].startswith("algebra"):
+        #     count += 1
+        ans = model.solve_problem(row['text'])
+        # df[index]['my_ans'] = ans
+            # if check_ans(ans, row['ans']):
+            #     success += 1
+            # else:
+            #     wrongs.append(index)
+    return df
 
 def check_ans(ans, ans_label):
     if len(ans) != len(ans_label):
@@ -39,5 +39,8 @@ def check_equations(equations, equation_label):
             return False
     return True
 
-tags = ['id', 'text', 'ans']
-df = pd.read_json("data/number_word_std.dev.json")
+if __name__ == '__main__':
+
+    tags = ['id', 'text', 'ans']
+    df = pd.read_json("data/number_word_std.dev.json")
+    check_over_data(df)
