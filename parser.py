@@ -15,11 +15,12 @@ op_params = ['x', 'y', 'z', 'w']
 
 
 def parse_sen(sen):
+    """
+    parses a mathematical question sentence into equations.
+    """
     nlp = spacy.load('en_core_web_sm')
     nlp_sen = nlp(sen)
-    # arr_sen = sen.replace('  ', ' ').split()
-    # arr_sen = [x.lower() for x in arr_sen]
-    my_equi = []
+    my_equis = []
     num_params = 0
     params = []
     curr_op = ''
@@ -34,10 +35,10 @@ def parse_sen(sen):
         if word.text in key_words_create and is_num(nlp_sen[i+1].text):
             eq = create_eq(num_params, curr_op, rmv_non_digits(nlp_sen[i+1].text))
             if eq:
-                my_equi.append(eq)
+                my_equis.append(eq)
         if word.text == 'another':
             num_params += 1
-    return my_equi
+    return my_equis
 
 
 def create_params(sons):
@@ -59,6 +60,9 @@ def create_params(sons):
     return params
 
 def create_eq(num_params, op, num):
+    '''
+    creates eq in the form of: param1 [op] param2 [op]... = num
+    '''
     optional_params = ['x', 'y', 'z']
     equi = ''
 
