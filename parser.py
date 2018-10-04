@@ -1,31 +1,44 @@
-import re
-key_words_num = {'one':1, 'two':2, 'three':3}
+import spacy
+key_words_num = {'one':1, 'two':2, 'three':3, 'One':1, 'Two':2, 'Three':3}
 key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-'}
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
 key_words_create = {'of', 'is', 'by'}
 
+# nlp = spacy.load('en_core_web_sm')
+# doc = nlp(u'If the first and third of three consecutive even integers are added, the result is 12 less than three times the second integer. find the integers')
+# for token in doc:
+#     print(token.text)
+# print([token.text for token in doc[9].rights])  # ['on']
+# print(doc[2].n_lefts)  # 2
+# print(doc[2].n_rights)  # 1
+
 
 def parse_sen(sen):
-    arr_sen = sen.replace('  ', ' ').split()
-    arr_sen = [x.lower() for x in arr_sen]
+    nlp = spacy.load('en_core_web_sm')
+    nlp_sen = nlp(sen)
+    # arr_sen = sen.replace('  ', ' ').split()
+    # arr_sen = [x.lower() for x in arr_sen]
     my_equi = []
     num_params = 0
     curr_op = ''
-    for i, word in enumerate(arr_sen):
-        if word in key_words_params:
-            if arr_sen[i-1] in key_words_num.keys():
-                num_params = key_words_num[arr_sen[i-1]]
-            if arr_sen[i-1].isdigit():
-                num_params = arr_sen[i-1]
-        if word in key_words_op.keys():
-            curr_op = key_words_op[word]
-        if (word in key_words_create) and is_num(arr_sen[i+1]):
-            eq = create_eq(num_params, curr_op, rmv_non_digits(arr_sen[i+1]))
+    for i, word in enumerate(nlp_sen):
+        if word.text in key_words_params:
+            if nlp_sen[i-1].text in key_words_num.keys():
+                num_params = key_words_num[nlp_sen[i-1].text]
+            if nlp_sen[i-1].text.isdigit():
+                num_params = nlp_sen[i-1].text
+        if word.text in key_words_op.keys():
+            curr_op = key_words_op[word.text]
+        if word.text in key_words_create and is_num(nlp_sen[i+1].text):
+            eq = create_eq(num_params, curr_op, rmv_non_digits(nlp_sen[i+1].text))
             if eq:
                 my_equi.append(eq)
-        if word == 'another':
+        if word.text == 'another':
             num_params += 1
     return my_equi
+
+
+# def create_params(sons):
 
 
 def create_eq(num_params, op, num):
@@ -50,5 +63,5 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'one number exceeds another by -5, and their sum is 29; find them.'
+    sen = 'what is one plus one'
     print(parse_sen(sen))
