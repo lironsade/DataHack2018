@@ -4,7 +4,7 @@ key_words_num = {'one':1, 'two':2, 'three':3, 'One':1, 'Two':2, 'Three':3, 'A':1
 key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-', 'less':'-'}
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
 key_words_create = {'of', 'is', 'by'}
-op_params = ['x', 'y', 'z', 'w']
+op_params = ['x', 'y', 'z', 'w','a','b','c','d','e','f']
 
 # nlp = spacy.load('en_core_web_sm')
 # doc = nlp(u'If the first and third of three consecutive even integers are added, the result is 12 less than three times the second integer. find the integers')
@@ -26,6 +26,7 @@ def parse_sen(sen):
     my_equis = []
     params = []
     curr_op = ''
+
     for i, word in enumerate(nlp_sen):
         if word.text in key_words_params and not params_found:
             params = create_params(word.lefts)
@@ -36,9 +37,10 @@ def parse_sen(sen):
             if is_another:
                 params.append('y')
                 is_another = False
-            op = str(list(word.rights)[0])
-            if word.text == 'is' and curr_op == '' and op in key_words_op.keys():
-                curr_op = key_words_op[op]
+            if word.text == 'is' and curr_op == '':
+                right_childs = list(word.rights)
+                if right_childs and str(right_childs[0]) in key_words_op.keys():
+                    curr_op = key_words_op[str(right_childs[0])]
             elif curr_op == '':
                 continue
             eq = create_eq(params, curr_op, rmv_non_digits(nlp_sen[i+1].text))
@@ -54,9 +56,14 @@ def create_params(sons):
     for son in sons:
         if son.text in key_words_num or is_num(son.text):
             if is_num(son.text):
-                num_params = int(son.text)
+                try:
+                    num_params = int(son.text)
+                except:
+                    return []
             else:
                 num_params = key_words_num[son.text]
+            if num_params > 4:
+                return []
             for i in range(num_params):
                 params.append(op_params[i])
         if son.text == 'consecutive':
@@ -74,7 +81,7 @@ def create_eq(params, op, num):
     '''
     creates eq in the form of: param1 [op] param2 [op]... = num
     '''
-    if not params:
+    if not params or op == '':
         return
 
     equi = ''
@@ -98,7 +105,7 @@ def rmv_non_digits(num):
 
 
 if __name__ == '__main__':
-    sen = 'what three consecutive odd integers have a sum of -75?'
+    sen = 'the sum of three consecutive integers x, x + 1, and x + 2, is 72'
     # sen = 'The sum of three consecutive odd integers is -273. What are the integers?'
     print(parse_sen(sen))
     # print(create_eq(['x', 'y'], '+', '6'))
