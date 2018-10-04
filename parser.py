@@ -3,6 +3,7 @@ key_words_num = {'one':1, 'two':2, 'three':3, 'One':1, 'Two':2, 'Three':3}
 key_words_op = {'difference':'-', 'sum':'+', 'exceeds':'-', 'less than':'-'}
 key_words_params = {'numbers', 'number', 'integers', 'integer'}
 key_words_create = {'of', 'is', 'by'}
+op_params = ['x', 'y', 'z', 'w']
 
 # nlp = spacy.load('en_core_web_sm')
 # doc = nlp(u'If the first and third of three consecutive even integers are added, the result is 12 less than three times the second integer. find the integers')
@@ -20,6 +21,7 @@ def parse_sen(sen):
     # arr_sen = [x.lower() for x in arr_sen]
     my_equi = []
     num_params = 0
+    params = []
     curr_op = ''
     for i, word in enumerate(nlp_sen):
         if word.text in key_words_params:
@@ -38,8 +40,23 @@ def parse_sen(sen):
     return my_equi
 
 
-# def create_params(sons):
-
+def create_params(sons):
+    params = []
+    num_params = -1
+    for i in range(len(sons)):
+        if sons[i].text in key_words_num:
+            num_params = key_words_num[sons[i].text]
+            for i in range(num_params):
+                params.append(op_params[i])
+        if sons[i].text == 'consecutive':
+            params = consecutive(['x']*num_params)
+        if sons[i].text == 'even':
+            params = even(params)
+        if sons[i].text == 'odd':
+            params = odd(params)
+    if num_params == -1:
+        return []
+    return params
 
 def create_eq(num_params, op, num):
     optional_params = ['x', 'y', 'z']
